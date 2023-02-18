@@ -20,7 +20,6 @@ function App() {
   //   console.log(value)
   // }, [value])
 
-
   return (
     <div className='App'>
       <input
@@ -43,7 +42,7 @@ function App() {
       {pics === 'Searching' ? (
         <div>Loading...</div>
       ) : (
-        pics.map((pic) => <img key={pic.url.slice(-10)} src={pic.url} width='400' />)
+        pics.map((pic) => <img key={pic.url.slice(-10)} src={pic.url} width='600' />)
       )}
     </div>
   )

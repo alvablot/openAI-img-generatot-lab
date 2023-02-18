@@ -1,3 +1,4 @@
+const { Configuration, OpenAIApi } = require('openai')
 const express = require('express')
 const app = express()
 const PORT = 5000
@@ -11,37 +12,23 @@ dotenv.config()
 
 app.use(cors())
 app.use(bodyParser.json())
-
-const token = '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'
-const config = {
-  headers: { Authorization: `Bearer ${token}` },
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+})
+const openai = new OpenAIApi(configuration)
+async function fetchData(request) {
+  const response = await openai.createImage({
+    prompt: request,
+    n: 
+    2,
+    size: '1024x1024',
+  })
+  return response.data.data
 }
-const bodyData = {
-  prompt: 'A cute baby sea otter',
-  n: 2,
-  size: '1024x1024',
-}
-
-const fetchData = async () => {
-  const data = await axios.post(
-    'https://api.openai.com/v1/images/generations',
-    config,
-    bodyData
-  )
-  return data.data.url
-}
-
-// setup the logger
-app.use(morgan('tiny'))
-
-async function run() {
-  console.log(await fetchData())
-}
-
-run()
 
 app.get('/', async (req, res) => {
-  res.json(await fetchData())
+  console.log(req.query.request)
+  res.json(await fetchData(req.query.request))
 })
 
 app.listen(PORT, (err) => {
