@@ -13,7 +13,9 @@ function App() {
           //console.log(json)
           setPics([...json])
         })
-        .catch(new Error())
+        .catch((error) => {
+          return
+        })
     }
   }
   // useEffect(() => {

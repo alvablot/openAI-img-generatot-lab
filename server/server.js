@@ -19,16 +19,24 @@ const openai = new OpenAIApi(configuration)
 async function fetchData(request) {
   const response = await openai.createImage({
     prompt: request,
-    n: 
-    2,
+    n: 2,
     size: '1024x1024',
   })
-  return response.data.data
+  if (response.data.data) return response.data.data
+  else return
 }
 
-app.get('/', async (req, res) => {
-  console.log(req.query.request)
-  res.json(await fetchData(req.query.request))
+app.get('/', async (req, res, next) => {
+  try {
+    console.log(req.query.request)
+    res.json(await fetchData(req.query.request))
+  } catch (error) {
+    return next(error)
+  }
+})
+
+app.use((err, req, res, next) => {
+  res.status(500).send({ error: err.message })
 })
 
 app.listen(PORT, (err) => {
